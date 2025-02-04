@@ -106,6 +106,9 @@
     /**************
      * Estrutura das Cenas
      **************/
+    /**************
+     * Estrutura das Cenas
+     **************/
     const scenes = {
       inicio: {
         desc: `<p class="crucial">Consultório Psicanalítico</p>
@@ -135,9 +138,116 @@
           "tentar acalmar": { target: "tentativa_calma" },
           "desviar o assunto": { target: "desvio" }
         }
+      },
+
+      tentativa_calma: {
+        desc: `<p class="crucial">Tentativa de Acalmar</p>
+               <p>Você tenta tranquilizar o paciente, mas suas palavras parecem desaparecer diante do turbilhão de imagens e sentimentos que ele transmite.</p>
+               <p>Ele insiste: "Os sonhos... são mais que simples imagens. Eles revelam um pacto, algo feito há muito tempo."</p>`,
+        actions: {
+          "escutar atentamente": { target: "fraternitas_revelacao" },
+          "desviar o assunto": { target: "desvio" }
+        }
+      },
+
+      desvio: {
+        desc: `<p class="crucial">Desvio de Assunto</p>
+               <p>Você tenta mudar o foco da conversa, mas o paciente parece se fechar em si mesmo, e o clima se torna ainda mais tenso.</p>
+               <p>Em seu silêncio, ecos de um ritual distante começam a se formar.</p>`,
+        actions: {
+          "voltar à sessão": { target: "sessao_inicial" }
+        }
+      },
+
+      fraternitas_revelacao: {
+        desc: `<p class="crucial">Revelações de Fraternitas Noctis</p>
+               <p>O paciente baixa a voz e confessa: "Eu faço parte de Fraternitas Noctis. Em meus sonhos, vejo rituais e... minha mãe, doutor, ela fez um pacto com a ordem. Desde que eu era bebê, tenho sonhos em que sou ofertado a um deus obscuro, como se estivesse destinado a algo terrível."</p>
+               <p class="crucial">Um calafrio percorre sua espinha ao ouvir essa confissão.</p>`,
+        actions: {
+          "questionar sobre sua mãe": { target: "pacto_mae", effect: () => { clues.pactRevealed = true; } },
+          "continuar escutando": { target: "sonhos" },
+          "encerrar sessão": { target: "sessao_encerrada" }
+        }
+      },
+
+      pacto_mae: {
+        desc: `<p class="crucial">A Revelação do Pacto</p>
+               <p>Você questiona: "O que exatamente ocorreu com minha mãe?"</p>
+               <p>O paciente responde, com olhos vidrados: "Ela se uniu a eles... entregou você aos desígnios do deus de Fraternitas Noctis. Seus primeiros sonhos eram mensagens de abandono, como se sua própria existência fosse uma oferta."</p>
+               <p class="crucial">A realidade se desfaz em fragmentos: lembranças de um passado esquecido invadem sua mente.</p>`,
+        actions: {
+          "analisar os sonhos": { target: "analise_sonhos", effect: () => { clues.dreamsAnalyzed = true; } },
+          "confrontar o paciente": { target: "confronto" },
+          "encerrar sessão": { target: "sessao_encerrada" }
+        }
+      },
+
+      sonhos: {
+        desc: `<p class="crucial">Os Sonhos Perturbadores</p>
+               <p>O paciente descreve sonhos vívidos onde símbolos estranhos e rituais obscuros se repetem. Em um deles, você vê a si mesmo, ainda bebê, sendo oferecido a um deus ancestral, em um cenário de abandono e trevas.</p>
+               <p class="hint">Essa revelação ecoa uma sensação de perda e abandono que você jamais imaginou.</p>`,
+        actions: {
+          "analisar os sonhos": { target: "analise_sonhos", effect: () => { clues.dreamsAnalyzed = true; } },
+          "confrontar o paciente": { target: "confronto" },
+          "encerrar sessão": { target: "sessao_encerrada" }
+        }
+      },
+
+      analise_sonhos: {
+        desc: `<p class="crucial">Análise dos Sonhos</p>
+               <p>Você mergulha na análise dos sonhos, tentando ligar as peças: a participação em Fraternitas Noctis, o pacto com sua mãe e os fragmentos de memórias esquecidas. A sensação de abandono se intensifica, e os símbolos começam a revelar um destino sombrio.</p>`,
+        actions: {
+          "confrontar o paciente": { target: "confronto" },
+          "ligar para um colega": { target: "ligar_colega", effect: () => { clues.colleagueContact = true; } }
+        }
+      },
+
+      confronto: {
+        desc: `<p class="crucial">Confronto Interior</p>
+               <p>Você, abalado pelas revelações, encara o paciente: "Tudo isso... é real? Minha mãe realmente me entregou aos desígnios desse deus obscuro?"</p>
+               <p>O paciente, com uma mistura de compaixão e inquietude, apenas sussurra que o caminho da verdade é doloroso.</p>`,
+        actions: {
+          "ligar para um colega": { target: "ligar_colega", effect: () => { clues.colleagueContact = true; } },
+          "encarar o terror": { target: "terror_final" },
+          "encerrar sessão": { target: "sessao_encerrada" }
+        }
+      },
+
+      ligar_colega: {
+        desc: `<p class="crucial">Consulta com Colega</p>
+               <p>Você decide buscar apoio e liga para um colega psicanalista, alguém em quem confia. Em uma conversa tensa, ele confirma que histórias de pactos e sonhos perturbadores não são incomuns – mas alerta que essa revelação pode marcar o início de um colapso emocional.</p>
+               <p class="hint">A voz do colega ecoa como um aviso: "Cuidado com os limites entre a realidade e o sonho."</p>`,
+        actions: {
+          "voltar à sessão": { target: "sessao_inicial" },
+          "investigar documentos antigos": { target: "documentos" }
+        }
+      },
+
+      documentos: {
+        desc: `<p class="crucial">Documentos Ocultos</p>
+               <p>Você vasculha antigos arquivos e encontra registros obscuros que ligam sua mãe à ordem Fraternitas Noctis. Esses documentos confirmam que, desde seu nascimento, você foi marcado para algo sinistro.</p>
+               <p class="crucial">O pavor do abandono e da traição se mistura à angústia de um destino selado.</p>`,
+        actions: {
+          "voltar à sessão": { target: "sessao_inicial" },
+          "encarar o terror": { target: "terror_final" }
+        }
+      },
+
+      terror_final: {
+        desc: `<p class="crucial">O Terror Final</p>
+               <p>Você decide encarar de frente os horrores revelados. Em uma espiral de alucinações e memórias esquecidas, revê seu passado: um bebê ofertado aos deuses obscuros, uma mãe que se perdeu na escuridão do pacto.</p>
+               <p class="crucial">A realidade se desfaz, e você é consumido por um sentimento avassalador de abandono e terror existencial.</p>
+               <p class="hint">FIM: O abismo da verdade</p>`,
+        actions: {}
+      },
+
+      sessao_encerrada: {
+        desc: `<p class="crucial">Sessão Encerrada</p>
+               <p>Você decide encerrar a sessão, deixando as revelações por um momento no limbo da dúvida. Mas o eco das palavras do paciente continua a assombrá-lo, e a dúvida sobre sua própria origem permanece.</p>
+               <p class="hint">FIM: Um silêncio perturbador permanece...</p>`,
+        actions: {}
       }
     };
-
     /**************
      * Sistema do Jogo
      **************/
