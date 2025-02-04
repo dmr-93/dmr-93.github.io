@@ -106,9 +106,6 @@
     /**************
      * Estrutura das Cenas
      **************/
-    /**************
-     * Estrutura das Cenas
-     **************/
     const scenes = {
       inicio: {
         desc: `<p class="crucial">Consultório Psicanalítico</p>
@@ -248,6 +245,7 @@
         actions: {}
       }
     };
+
     /**************
      * Sistema do Jogo
      **************/
@@ -259,6 +257,7 @@
       const scene = scenes[currentScene];
       output.innerHTML = scene.desc;
 
+      // Verifica se há ações válidas na cena
       const validActions = Object.keys(scene.actions)
         .filter(cmd => !scene.actions[cmd].condition || scene.actions[cmd].condition());
       
@@ -299,7 +298,7 @@
       input.focus();
     };
 
-    // Rola a página para cima quando o input recebe foco (ajuste para mobile)
+    // Ajusta o scroll quando o input recebe foco (útil para mobile)
     input.addEventListener("focus", () => {
       setTimeout(() => {
         window.scrollTo({ top: input.offsetTop - 20, behavior: "smooth" });
