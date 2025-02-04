@@ -1,1 +1,146 @@
-testando!
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Entre Sonhos e Pactos</title>
+  <style>
+    body { 
+      background: url('https://cdn.qwenlm.ai/output/5875d79b-acc3-413b-9a10-058b3678e3b0/t2i/5901ef43-5b14-4743-b3f0-68d417dea1ac/a7163fe8-db99-4728-96df-a0dbdf03d9de.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #c0c0c0; 
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+    }
+
+    #game-container {
+      max-width: 800px;
+      margin: 1rem auto 2rem auto; 
+      padding: 1rem;
+      border: 1px solid #3a3a3a;
+      background: rgba(10, 10, 10, 0.5); /* Fundo semi-transparente */
+    }
+
+    #output {
+      height: 400px;
+      overflow-y: scroll;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #2a2a2a;
+      background: rgba(18, 18, 18, 0.6); /* Transparência no fundo */
+    }
+
+    #input {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: rgba(26, 26, 26, 0.6); /* Transparência no input */
+      color: #e0e0e0;
+      border: 1px solid #3a3a3a;
+    }
+
+    .hint { color: #5a5a5a; }
+    .crucial { color: #8b0000; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="output"></div>
+    <input type="text" id="input" placeholder="O que você faz?">
+  </div>
+
+  <script>
+    /**************
+     * Variáveis Globais
+     **************/
+    const clues = {
+      pactRevealed: false,      // Revelação do pacto da mãe com a ordem Fraternitas Noctis
+      dreamsAnalyzed: false,    // Análise dos sonhos perturbadores
+      colleagueContact: false   // Contato com colega psicanalista para buscar apoio
+    };
+
+    /**************
+     * Estrutura das Cenas
+     **************/
+    const scenes = {
+      inicio: {
+        desc: `<p class="crucial">Consultório Psicanalítico</p>
+               <p>Você é um psicanalista em início de carreira. Hoje, um novo paciente chega com um quadro que parece ser psicose.</p>
+               <p>Ao olhar seu prontuário, você nota anotações inquietantes sobre sonhos e referências a um grupo ocultista chamado <em>Fraternitas Noctis</em>.</p>`,
+        actions: {
+          "revisar prontuário": { target: "prontuario" },
+          "iniciar sessão": { target: "sessao_inicial" }
+        }
+      },
+
+      prontuario: {
+        desc: `<p>Prontuário do Paciente</p>
+               <p>O prontuário revela que o paciente relata sonhos vívidos e perturbadores, onde símbolos ocultos e referências a rituais do grupo Fraternitas Noctis se misturam com episódios de psicose.</p>`,
+        actions: {
+          "voltar": { target: "inicio" },
+          "iniciar sessão": { target: "sessao_inicial" }
+        }
+      },
+
+      sessao_inicial: {
+        desc: `<p>Sessão com o Paciente</p>
+               <p>O paciente, com olhar distante e voz trêmula, diz: "Doutor, meus sonhos... eles me levam a lugares que não consigo compreender. E há segredos... de um grupo chamado Fraternitas Noctis."</p>
+               <p class="hint">(Você sente uma inquietação crescente ao ouvir as palavras dele.)</p>`,
+        actions: {
+          "escutar atentamente": { target: "fraternitas_revelacao" },
+          "tentar acalmar": { target: "tentativa_calma" },
+          "desviar o assunto": { target: "desvio" }
+        }
+      }
+    };
+
+    /**************
+     * Sistema do Jogo
+     **************/
+    const output = document.getElementById('output');
+    const input = document.getElementById('input');
+    let currentScene = 'inicio';
+
+    function updateScene() {
+      const scene = scenes[currentScene];
+      output.innerHTML = scene.desc;
+
+      const validActions = Object.keys(scene.actions)
+        .filter(cmd => !scene.actions[cmd].condition || scene.actions[cmd].condition());
+      
+      if (validActions.length === 0) {
+        input.disabled = true;
+        input.placeholder = "Fim do jogo. Recarregue a página para jogar novamente.";
+      } else {
+        input.disabled = false;
+        input.placeholder = "O que você faz?";
+      }
+      output.scrollTop = output.scrollHeight;
+    }
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const command = input.value.toLowerCase().trim();
+        input.value = '';
+        const scene = scenes[currentScene];
+
+        if (scene.actions[command] && (!scene.actions[command].condition || scene.actions[command].condition())) {
+          if (scene.actions[command].effect) {
+            scene.actions[command].effect();
+          }
+          currentScene = scene.actions[command].target;
+          output.innerHTML += `<p class="hint">> ${command}</p>`;
+          updateScene();
+        } else {
+          const available = Object.keys(scene.actions)
+            .filter(cmd => !scene.actions[cmd].condition || scene.actions[cmd].condition());
+          output.innerHTML += `<p>Comando inválido. Tente:</p><ul>${available.map(a => `<li>${a}</li>`).join('')}</ul>`;
+          output.scrollTop = output.scrollHeight;
+        }
+      }
+    });
+
+    updateScene();
+  </script>
+</body>
+</html>
