@@ -1,49 +1,90 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Entre Sonhos e Pactos</title>
   <style>
-    body { 
-      background: url('https://cdn.qwenlm.ai/output/5875d79b-acc3-413b-9a10-058b3678e3b0/t2i/5901ef43-5b14-4743-b3f0-68d417dea1ac/a7163fe8-db99-4728-96df-a0dbdf03d9de.png') no-repeat center center fixed;
-      background-size: cover;
-      color: #c0c0c0; 
+    body {
+      background-color: #121212;
+      color: #c0c0c0;
       font-family: 'Courier New', monospace;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #banner {
+      width: 100%;
+      max-height: 200px;
+      overflow: hidden;
+    }
+
+    #banner img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     #game-container {
+      width: 90%;
       max-width: 800px;
-      margin: 1rem auto 2rem auto; 
+      margin: 1rem auto;
       padding: 1rem;
       border: 1px solid #3a3a3a;
-      background: rgba(10, 10, 10, 0.5); /* Fundo semi-transparente */
+      background: #1a1a1a;
+      box-sizing: border-box;
     }
 
     #output {
       height: 400px;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding: 1rem;
       margin-bottom: 1rem;
       border: 1px solid #2a2a2a;
-      background: rgba(18, 18, 18, 0.6); /* Transparência no fundo */
+      background: #181818;
+      font-size: 1rem;
+      line-height: 1.5;
     }
 
     #input {
       width: 100%;
-      padding: 0.5rem;
-      background-color: rgba(26, 26, 26, 0.6); /* Transparência no input */
+      padding: 0.8rem;
+      font-size: 1rem;
+      background-color: #262626;
       color: #e0e0e0;
       border: 1px solid #3a3a3a;
+      box-sizing: border-box;
     }
 
     .hint { color: #5a5a5a; }
     .crucial { color: #8b0000; font-weight: bold; }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+      #output {
+        height: 300px;
+        font-size: 0.9rem;
+      }
+
+      #input {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+
+      #banner {
+        max-height: 150px;
+      }
+    }
   </style>
 </head>
 <body>
+  <div id="banner">
+    <img src="https://cdn.qwenlm.ai/output/5875d79b-acc3-413b-9a10-058b3678e3b0/t2i/5901ef43-5b14-4743-b3f0-68d417dea1ac/a7163fe8-db99-4728-96df-a0dbdf03d9de.png" alt="Banner do jogo">
+  </div>
+
   <div id="game-container">
     <div id="output"></div>
     <input type="text" id="input" placeholder="O que você faz?">
@@ -54,9 +95,9 @@
      * Variáveis Globais
      **************/
     const clues = {
-      pactRevealed: false,      // Revelação do pacto da mãe com a ordem Fraternitas Noctis
-      dreamsAnalyzed: false,    // Análise dos sonhos perturbadores
-      colleagueContact: false   // Contato com colega psicanalista para buscar apoio
+      pactRevealed: false,
+      dreamsAnalyzed: false,
+      colleagueContact: false
     };
 
     /**************
